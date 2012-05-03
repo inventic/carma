@@ -35,7 +35,9 @@ Executable carma
     text                        >= 0.11 && < 0.12,
     time                        >= 1.1 && < 1.5,
     transformers                >= 0.2 && < 0.4,
-    vin-parser                  == 0.1.*
+    vin-parser                  == 0.1.*,
+    weather-api                 == 0.1.*,
+    utf8-string                 == 0.3.7
 
   if flag(development)
     cpp-options: -DDEVELOPMENT

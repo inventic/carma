@@ -37,6 +37,7 @@ import Snap.Util.FileServe
 import Snap.Snaplet.Candibober
 import Snap.Snaplet.Redson
 import Snap.Snaplet.Vin
+import Snap.Snaplet.WeatherApi
 
 ------------------------------------------------------------------------------
 -- | Application snaplet state type: Redson, Heist.
@@ -47,6 +48,7 @@ data App = App
     , _session :: Snaplet SessionManager
     , _auth :: Snaplet (AuthManager App)
     , _vin :: Snaplet Vin
+    , _weather :: Snaplet WApiHandler
     , _startTime :: UTCTime
     }
 
@@ -159,9 +161,9 @@ appInit = makeSnaplet "app" "Forms application" Nothing $ do
                       , asRememberPeriod = Just (rmbPer * 24 * 60 * 60)}
                                session authDb
   v <- nestSnaplet "vin" vin vinInit
-
+  wapi <- nestSnaplet "weather" weather weatherApiInit
   sTime <- liftIO getCurrentTime
 
   addRoutes routes
 
-  return $ App c h r s a v sTime
+  return $ App c h r s a v wapi sTime
