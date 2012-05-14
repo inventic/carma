@@ -96,8 +96,9 @@ checkMap =
 type ConditionName = B.ByteString
 
 
-data Condition = Condition { cType :: ConditionName
+data Condition = Condition { cType   :: ConditionName
                            , checker :: Checker
+                           , cArgs    :: CheckerArgs
                            }
 
 
@@ -110,11 +111,12 @@ instance FromJSON Condition where
             --
             -- If "args" is not present in target description, feed
             -- NoArgs.
-            chain <- runErrorT =<< freeChecker <$>
-                     fromMaybe NoArgs <$> (v .:? "args")
+            args  <- fromMaybe NoArgs <$> (v .:? "args")
+            chain <- runErrorT =<< freeChecker <$> return args
+                     -- fromMaybe NoArgs <$> (v .:? "args")
             case chain of
               Left e -> error $ "Could not build checker: " ++ (show e)
-              Right checker -> return $ Condition checkType checker
+              Right checker -> return $ Condition checkType checker args
         Nothing -> error $ "Unknown check type " ++ (B.unpack checkType)
     parseJSON _ = error "Could not parse condition"
 
@@ -163,20 +165,27 @@ updateDataset dataset = upd (M.toList dataset) $ Just M.empty
         upd (tail d1) $ n >>= (\v -> return $ M.insert k v d2)
 -- $ maybe Nothing (\x -> Just $ M.insert k x d2) n
 
-data CheckedConditions = CCond { true, false, nothing :: [ConditionName] }
+data CheckedCondition = CheckedCondition { name :: ConditionName
+                                         , args :: CheckerArgs
+                                         }
+data CheckedConditions = CCond { true, false, nothing :: [CheckedCondition] }
+
+$(deriveToJSON id ''CheckerArgs)
+$(deriveToJSON id ''CheckedCondition)
 $(deriveToJSON id ''CheckedConditions)
 
 -- | check conditions on dataset and divide them it 3 groups
 check :: [Condition] -> Dataset -> IO CheckedConditions
 check conditions ds = check' conditions $ CCond [] [] []
     where
+      m c = CheckedCondition (cType c) (cArgs c)
       check' []     cc = return cc
       check' (c:cs) cc = do
         r <- (checker c) ds
         case r of
-          Nothing    -> check' cs $ cc { nothing = (cType c) : (nothing cc) }
-          Just True  -> check' cs $ cc { true    = (cType c) : (true cc   ) }
-          Just False -> check' cs $ cc { false   = (cType c) : (false cc  ) }
+          Nothing    -> check' cs $ cc { nothing = (m c) : (nothing cc) }
+          Just True  -> check' cs $ cc { true    = (m c) : (true cc   ) }
+          Just False -> check' cs $ cc { false   = (m c) : (false cc  ) }
 
 ------------------------------------------------------------------------------
 -- | Read target name from @target@ request parameter and dataset spec
