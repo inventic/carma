@@ -404,6 +404,7 @@
             id="textarea-field-template">
       <div class="control-group"
            {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { warning: {{name}}Regexp }"{{/ meta.regexp}}
            >
         <div class="control-label">
           <label>{{ meta.label }}
@@ -438,6 +439,7 @@
             id="text-field-template">
       <div class="control-group"
            {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { warning: {{name}}Regexp }"{{/ meta.regexp}}
            >
         <div class="control-label">
           <label>{{ meta.label }}
@@ -452,6 +454,9 @@
           <input type="text"
                  class="pane-span focusable"
                  name="{{ name }}"
+                 {{# meta.transform }}
+                    style="text-transform:{{meta.transform}};"
+                 {{/ meta.transform }}
                  {{# readonly }}readonly{{/ readonly }}
                  data-bind="value: {{ name }},
                             valueUpdate: 'afterkeydown'" />
@@ -464,6 +469,7 @@
             id="datetime-field-template">
       <div class="control-group"
            {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { warning: {{name}}Regexp }"{{/ meta.regexp}}
            >
         <div class="control-label">
           <label>{{ meta.label }}
@@ -490,6 +496,7 @@
             id="date-field-template">
       <div class="control-group"
            {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { warning: {{name}}Regexp }"{{/ meta.regexp}}
            >
         <div class="control-label">
           <label>{{ meta.label }}
@@ -551,6 +558,7 @@
             id="dictionary-field-template">
       <div class="control-group"
            {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { warning: {{name}}Regexp }"{{/ meta.regexp}}
            >
         <div class="control-label">
           <label>{{ meta.label }}
@@ -602,7 +610,10 @@
     <script type="text/template"
             class="field-template"
             id="picker-field-template">
-      <div class="control-group">
+      <div class="control-group"
+           {{# meta.required }}data-bind="css: { error: {{name}}Not }"{{/ meta.required}}
+           {{# meta.regexp }}data-bind="css: { error: {{name}}Regexp }"{{/ meta.regexp}}
+           >
         <div class="control-label">
           <label>{{ meta.label }}
             {{# meta.infoText }}
@@ -617,6 +628,9 @@
             <input type="text"
                    class="pane-span focusable {{# readonly }}disabled{{/ readonly }}"
                    {{# readonly }}readonly{{/ readonly }}
+                   {{# meta.transform }}
+                      style="text-transform:{{meta.transform}};"
+                   {{/ meta.transform }}
                    name="{{ name }}"
                    data-bind="value: {{ name }},
                               valueUpdate: 'afterkeydown'"/>
@@ -691,7 +705,7 @@
           <label class="checkbox inline">
             <input type="checkbox"
                    name="{{ name }}"
-                   {{# readonly }}readonly{{/ readonly }}
+                   {{# readonly }}disabled{{/ readonly }}
                    data-bind="checked: {{ name }},
                               valueUpdate: 'change'" />
           {{ meta.label }}
@@ -759,6 +773,9 @@
           <div class="input-append">
             <input type="text"
                    class="pane-span"
+                   {{# meta.transform }}
+                      style="text-transform:{{meta.transform}};"
+                   {{/ meta.transform }}
                    onfocus="showComplex('{{ viewName }}', '{{ name }}');"
                    {{# readonly }}readonly{{/ readonly }}
                    data-bind="value: {{ name }},
@@ -859,7 +876,6 @@
     <!-- Form controls wrt user permissions -->
     <script type="text/template"
             id="permission-template">
-      <div class="form-actions">
         {{# readonly }}
         <button class="btn disabled" type="button">
           <i class="icon-ban-circle" /> Только для чтения</button>
@@ -870,8 +886,6 @@
           <i class="icon-pencil icon-white" /> Сохранить</button>
           <span class="save-result"/>
         {{/ readonly }}
-        <div style="clear: both;" />
-      </div>
     </script>
 
     <!-- List of empty required fields -->

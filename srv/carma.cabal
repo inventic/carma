@@ -20,6 +20,11 @@ Executable carma
 
   Other-modules:
     Application,
+    CustomLogic,
+    Actions.Compile
+    Actions.Eval
+    Actions.Parse
+    Actions.Types
     Snap.Snaplet.AvayaAES,
     Snap.Snaplet.Candibober,
     Snap.Snaplet.Candibober.Date,
@@ -50,6 +55,11 @@ Executable carma
     vin-parser                  == 0.1.*,
     hedis                       == 0.4.1,
     snaplet-redis               == 0.1.0.*
+
+  Extensions:
+    OverloadedStrings,
+    RecordWildCards,
+    NamedFieldPuns
 
   if flag(development)
     cpp-options: -DDEVELOPMENT

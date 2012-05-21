@@ -5,6 +5,22 @@
     "canRead": true,
     "canUpdate": true,
     "canDelete": true,
+    "defaults": {
+        "status": "creating",
+        "payType": "ruamc",
+        "warrantyCase": "0",
+        "overcosted": "0",
+        "falseCall": "none",
+        "towerType": "evac",
+        "towType": "dealer",
+        "vandalism": "0",
+        "accident": "0",
+        "wheelsUnblocked": "w0",
+        "canNeutral": "0",
+        "towingPointPresent": "0",
+        "manipulatorPossible": "0",
+        "suburbanMilage": "0"
+    },
     "applications": [
         {
             "targets": [
@@ -29,22 +45,62 @@
             "meta": {
                 "label": "Партнёр"
             }
-        },           
-        {
-            "targets": ["towAddress_address","towAddress_coords","towAddress_city","towAddress_comment"],
-            "canRead": ["front", "back", "head", "parguy"],
-            "canWrite": ["front", "back", "head"]
-        },        
-        {
-            "targets": ["towDealer_partner","towDealer_partnerTable","towDealer_coords"],
-            "canRead": ["front", "back", "head", "parguy"],
-            "canWrite": ["front", "back", "head"]
         },
         {
-            "targets": ["towContractor_partner","towContractor_partnerTable","towContractor_coords"],
-            "canRead": ["front", "back", "head", "parguy"],
-            "canWrite": ["front", "back", "head"]
-        },         
+            "targets": [
+                "towAddress_address",
+                "towAddress_coords",
+                "towAddress_city",
+                "towAddress_comment"
+            ],
+            "canRead": [
+                "front",
+                "back",
+                "head",
+                "parguy"
+            ],
+            "canWrite": [
+                "front",
+                "back",
+                "head"
+            ]
+        },
+        {
+            "targets": [
+                "towDealer_partner",
+                "towDealer_partnerTable",
+                "towDealer_coords"
+            ],
+            "canRead": [
+                "front",
+                "back",
+                "head",
+                "parguy"
+            ],
+            "canWrite": [
+                "front",
+                "back",
+                "head"
+            ]
+        },
+        {
+            "targets": [
+                "towContractor_partner",
+                "towContractor_partnerTable",
+                "towContractor_coords"
+            ],
+            "canRead": [
+                "front",
+                "back",
+                "head",
+                "parguy"
+            ],
+            "canWrite": [
+                "front",
+                "back",
+                "head"
+            ]
+        },
         {
             "targets": [
                 "payment_payment"
@@ -56,12 +112,12 @@
     ],
     "fields": [
         {
-          "name": "parentId",
-          "canRead": true,
-          "canWrite": true,
-          "meta": {
-            "invisible": true
-          }
+            "name": "parentId",
+            "canRead": true,
+            "canWrite": true,
+            "meta": {
+                "invisible": true
+            }
         },
         {
             "name": "status",
@@ -284,40 +340,64 @@
             }
         },
         {
-          "name": "expectedDealerInfo",
-          "canRead": ["back", "head"],
-          "canWrite": ["back", "head"],
-          "type": "datetime",
-          "meta": {
-            "label": "Ожидаемое время получения информации от дилера"
-          }
+            "name": "expectedDealerInfo",
+            "canRead": [
+                "back",
+                "head"
+            ],
+            "canWrite": [
+                "back",
+                "head"
+            ],
+            "type": "datetime",
+            "meta": {
+                "label": "Ожидаемое время получения информации от дилера"
+            }
         },
         {
-          "name": "factDealerInfo",
-          "canRead": ["back", "head"],
-          "canWrite": ["back", "head"],
-          "type": "datetime",
-          "meta": {
-        	"label": "Фактическое время получения информации от дилера"
-          }
-        },    
-        {
-          "name": "expectedServiceClosure",
-          "canRead": ["back", "head"],
-          "canWrite": ["back", "head"],
-          "type": "datetime",
-          "meta": {
-        	"label": "Ожидаемое время закрытия услуги"
-          }
+            "name": "factDealerInfo",
+            "canRead": [
+                "back",
+                "head"
+            ],
+            "canWrite": [
+                "back",
+                "head"
+            ],
+            "type": "datetime",
+            "meta": {
+                "label": "Фактическое время получения информации от дилера"
+            }
         },
         {
-          "name": "factServiceClosure",
-          "canRead": ["back", "head"],
-          "canWrite": ["back", "head"],
-          "type": "datetime",
-          "meta": {
-        	"label": "Фактическое время закрытия услуги"
-          }
+            "name": "expectedServiceClosure",
+            "canRead": [
+                "back",
+                "head"
+            ],
+            "canWrite": [
+                "back",
+                "head"
+            ],
+            "type": "datetime",
+            "meta": {
+                "label": "Ожидаемое время закрытия услуги"
+            }
+        },
+        {
+            "name": "factServiceClosure",
+            "canRead": [
+                "back",
+                "head"
+            ],
+            "canWrite": [
+                "back",
+                "head"
+            ],
+            "type": "datetime",
+            "meta": {
+                "label": "Фактическое время закрытия услуги"
+            }
         },
         {
             "name": "repairEndDate",
@@ -463,7 +543,6 @@
                 "head"
             ],
             "meta": {
-                "default": false,
                 "label": "Случай вандализма"
             },
             "type": "checkbox"
@@ -482,7 +561,6 @@
                 "head"
             ],
             "meta": {
-                "default": false,
                 "label": "ДТП"
             },
             "type": "checkbox"
@@ -576,6 +654,24 @@
             "type": "dictionary"
         },
         {
+            "name": "canNeutral",
+            "canRead": [
+                "front",
+                "back",
+                "head",
+                "parguy"
+            ],
+            "canWrite": [
+                "front",
+                "back",
+                "head"
+            ],
+            "meta": {
+                "label": "Переключается на нейтральную передачу"
+            },
+            "type": "checkbox"
+        },
+        {
             "name": "towingPointPresent",
             "canRead": [
                 "front",
@@ -589,11 +685,10 @@
                 "head"
             ],
             "meta": {
-                "default": false,
                 "label": "Есть буксировочный крюк"
             },
             "type": "checkbox"
-        },        
+        },
         {
             "name": "manipulatorPossible",
             "canRead": [
@@ -608,7 +703,6 @@
                 "head"
             ],
             "meta": {
-                "default": true,
                 "label": "Есть место для манипулятора"
             },
             "type": "checkbox"
@@ -628,36 +722,6 @@
             ],
             "meta": {
                 "label": "Пробег эвакуатора за городом"
-            }
-        },
-        {
-            "name": "loadDate",
-            "canRead": [
-                "back",
-                "head"
-            ],
-            "canWrite": [
-                "back",
-                "head"
-            ],
-            "type": "datetime",
-            "meta": {
-                "label": "Время погрузки"
-            }
-        },
-        {
-            "name": "unloadDate",
-            "canRead": [
-                "back",
-                "head"
-            ],
-            "canWrite": [
-                "back",
-                "head"
-            ],
-            "type": "datetime",
-            "meta": {
-                "label": "Время разгрузки"
             }
         }
     ]
