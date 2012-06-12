@@ -54,7 +54,8 @@ Executable carma
     transformers                >= 0.2 && < 0.4,
     vin-parser                  == 0.1.*,
     hedis                       == 0.4.1,
-    snaplet-redis               == 0.1.0.*
+    snaplet-redis               == 0.1.0.*,
+    xmlhtml                     == 0.1.7
 
   Extensions:
     OverloadedStrings,

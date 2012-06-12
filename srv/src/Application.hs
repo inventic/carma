@@ -41,6 +41,7 @@ import Snap.Snaplet.Vin
 import CustomLogic
 import Actions.Compile
 
+import CustomSplices
 ------------------------------------------------------------------------------
 -- | Application snaplet state type: Redson, Heist.
 data App = App
@@ -128,7 +129,6 @@ routes = [ ("/", method GET $ authOrLogin indexPage)
 sessionTimeout :: Maybe Int
 sessionTimeout = Nothing
 
-
 ------------------------------------------------------------------------------
 -- | The application initializer.
 appInit :: SnapletInit App App
@@ -138,6 +138,7 @@ appInit = makeSnaplet "app" "Forms application" Nothing $ do
 
   h <- nestSnaplet "heist" heist $ heistInit "resources/templates"
   addAuthSplices auth
+  addCustomSplices
 
   -- FIXME: `IO (Either a b)` is a kinda duplication of error handling in pure
   -- code and in IO. Seems that plain IO and `throw/catch` is completely enough.
