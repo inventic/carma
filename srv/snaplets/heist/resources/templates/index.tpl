@@ -61,7 +61,7 @@
       <div class="row-fluid" id="layout" />
     </div>
 
-    <applyDir templ-dir="screens" />
+    <applyDir template-dir="screens" />
 
     <!--
          Form field templates.

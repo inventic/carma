@@ -40,7 +40,7 @@ applyDir tempDir = do
 applyDirImpl :: Monad m => Splice m
 applyDirImpl = do
   n  <- getParamNode
-  case X.getAttribute "templDir" n of
+  case X.getAttribute "template-dir" n of
     Nothing      -> return [] -- TODO: error handling
     Just tempDir -> applyDir tempDir
 
