@@ -12,10 +12,12 @@ import Data.Maybe (fromMaybe)
 
 import Snap.Core
 import Snap.Snaplet (with)
-import Snap.Snaplet.Heist
 import Snap.Snaplet.Auth hiding (session)
 import Snap.Snaplet.Session
 import Snap.Util.FileServe (serveFile)
+------------------------------------------------------------------------------
+import Text.Blaze.Renderer.Utf8 (renderHtml)
+import Templates (index)
 ------------------------------------------------------------------------------
 import qualified Snaplet.DbLayer as DB
 import Snaplet.SiteConfig
@@ -30,7 +32,9 @@ import Application
 ------------------------------------------------------------------------------
 -- | Render empty form for model.
 indexPage :: AppHandler ()
-indexPage = ifTop $ render "index"
+indexPage = do
+  chk <- with auth isLoggedIn
+  ifTop $ writeLBS $ renderHtml $ index chk ()
 
 
 ------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ Flag development
   Default: False
 
 Executable carma
-  hs-source-dirs: src
+  hs-source-dirs: src, resources/templates
   main-is: Main.hs
 
   Other-modules:
@@ -27,7 +27,8 @@ Executable carma
     Snaplet.SiteConfig.Types,
     Snaplet.SiteConfig.Models,
     Snaplet.SiteConfig.Permissions,
-    Snap.Snaplet.AvayaAES
+    Snap.Snaplet.AvayaAES,
+    Templates
 
   Build-depends:
     aeson                       == 0.6.*,
@@ -39,7 +40,6 @@ Executable carma
     bytestring                  >= 0.9.1 && < 0.10,
     data-lens-template          >= 2.1 && < 2.2,
     data-lens                   >= 2.0.1 && < 2.11,
-    heist                       == 0.8.*,
     old-locale                  == 1.0.*,
     snap                        == 0.8.*,
     snap-core                   == 0.8.*,
@@ -60,7 +60,9 @@ Executable carma
     snaplet-postgresql-simple   == 0.1,
     postgresql-sync-map         == 0.1.0,
     xlsx                        == 0.0,
-    xlsx-templater              == 0.0
+    xlsx-templater              == 0.0,
+    hamlet                      == 1.0.1.*,
+    blaze-html                  == 0.4.3.*
 
   Extensions:
     OverloadedStrings,

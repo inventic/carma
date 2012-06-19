@@ -50,9 +50,6 @@ appInit :: SnapletInit App App
 appInit = makeSnaplet "app" "Forms application" Nothing $ do
   cfg <- getSnapletUserConfig
 
-  h <- nestSnaplet "heist" heist $ heistInit "resources/templates"
-  addAuthSplices auth
-
   sesKey <- liftIO $
             lookupDefault "resources/private/client_session_key.aes"
                           cfg "session-key"
@@ -82,7 +79,7 @@ appInit = makeSnaplet "app" "Forms application" Nothing $ do
 
   addRoutes routes
 
-  return $ App h s authMgr c d v av
+  return $ App s authMgr c d v av
 
 
 ------------------------------------------------------------------------------
