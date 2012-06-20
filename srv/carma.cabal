@@ -15,7 +15,7 @@ Flag development
   Default: False
 
 Executable carma
-  hs-source-dirs: src, resources/templates
+  hs-source-dirs: src
   main-is: Main.hs
 
   Other-modules:
@@ -28,7 +28,8 @@ Executable carma
     Snaplet.SiteConfig.Models,
     Snaplet.SiteConfig.Permissions,
     Snap.Snaplet.AvayaAES,
-    Templates
+    Templates.Index
+    Templates.Fields
 
   Build-depends:
     aeson                       == 0.6.*,

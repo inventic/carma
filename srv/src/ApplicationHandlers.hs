@@ -8,7 +8,7 @@ import Control.Monad.IO.Class
 import Data.ByteString (ByteString)
 import qualified Data.Aeson as Aeson
 import qualified Data.Map as Map
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, fromJust)
 
 import Snap.Core
 import Snap.Snaplet (with)
@@ -16,8 +16,10 @@ import Snap.Snaplet.Auth hiding (session)
 import Snap.Snaplet.Session
 import Snap.Util.FileServe (serveFile)
 ------------------------------------------------------------------------------
-import Text.Blaze.Renderer.Utf8 (renderHtml)
-import Templates (index)
+-- import Text.Blaze.Renderer.Utf8 (renderHtml)
+import Text.Blaze.Renderer.Pretty (renderHtml)
+import Templates.Index (index)
+import Data.ByteString.UTF8 (fromString)
 ------------------------------------------------------------------------------
 import qualified Snaplet.DbLayer as DB
 import Snaplet.SiteConfig
@@ -33,10 +35,10 @@ import Application
 -- | Render empty form for model.
 indexPage :: AppHandler ()
 indexPage = do
-  chk <- with auth isLoggedIn
-  ifTop $ writeLBS $ renderHtml $ index chk ()
-
-
+  mbUser <- with auth currentUser
+  ifTop $ writeBS $ fromString $ renderHtml $ index (getUser mbUser) ()
+      where
+        getUser = userLogin . fromJust
 ------------------------------------------------------------------------------
 -- | Redirect using 303 See Other to login form.
 --
@@ -56,7 +58,7 @@ authOrLogin h = requireUser auth redirectToLogin h
 -- | Render empty login form.
 loginForm :: AppHandler ()
 loginForm = do
-  serveFile $ "resources/templates/login.html"
+  serveFile $ "resources/html/login.html"
 
 
 ------------------------------------------------------------------------------

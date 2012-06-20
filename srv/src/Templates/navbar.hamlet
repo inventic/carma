@@ -1,0 +1,40 @@
+<!-- Navigation bar on top -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <ul class="nav">
+        <a class="brand" href="/">
+          CaRMa
+        <li class="divider-vertical" />
+        <li id="call-screen-nav">
+          <a href="#call">Звонок
+        <li id="case-screen-nav">
+          <a href="#case">Кейс
+        <li id="back-screen-nav">
+          <a href="#back">Бэкофис
+        <li id="search-screen-nav">
+          <a href="#search">Поиск
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Ещё <b class="caret"></b>
+          <ul class="dropdown-menu">
+            <li id="vin-screen-nav">
+              <a href="#vin">Обновление базы VIN
+            <li id="partner-screen-nav">
+              <a href="#partner">Редактирование партнёров
+            <li id="reports-screen-nav">
+              <a href="#reports">Отчёты
+      <ul class="nav pull-right">
+        <li class="divider-vertical" />
+        <li class="dropdown">
+          <a href="#"
+             class="dropdown-toggle"
+             data-toggle="dropdown">
+            <i class="icon-user icon-white" />&nbsp
+            #{user}
+            <b class="caret">
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/logout/">
+                <i class="icon-off icon-black" />&nbsp;Выход
+

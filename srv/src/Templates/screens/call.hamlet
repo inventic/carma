@@ -1,0 +1,25 @@
+<!-- Call handling screen layout -->
+<script type="text/template"
+        class="screen-template"
+        id="call-screen-template">
+  <div id="left" class="nice-scrollbar call-pane">
+    <div id="call-form">
+    <button class="btn btn-success"
+            type="submit"
+            onClick="makeCase()" >
+      Новый кейс
+  <div id="center" class="nice-scrollbar call-pane">
+  <div id="bottom">
+    <table id="call-searchtable" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID
+          <th>ФИО
+          <th>Дата звонка
+          <th>Телефон
+          <th>Номер машины
+          <th>VIN
+          <th>Программа
+          <th>Комментарий
+      <tbody>
+
