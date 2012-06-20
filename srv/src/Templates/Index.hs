@@ -6,18 +6,18 @@ import Data.Text (Text)
 
 import Templates.Fields
 
-layout content = $(hamletFile "resources/templates/layout.hamlet")
+layout content = $(hamletFile "src/Templates/layout.hamlet")
 
 navbar :: Text -> t -> Html
-navbar user = $(hamletFile "resources/templates/navbar.hamlet")
+navbar user = $(hamletFile "src/Templates/navbar.hamlet")
 
-callScreen       = $(hamletFile "resources/templates/screens/call.hamlet")
-caseScreen       = $(hamletFile "resources/templates/screens/case.hamlet")
-searchScreen     = $(hamletFile "resources/templates/screens/search.hamlet")
-backofficeScreen = $(hamletFile "resources/templates/screens/backoffice.hamlet")
-reportsScreen    = $(hamletFile "resources/templates/screens/reports.hamlet")
-vinScreen        = $(hamletFile "resources/templates/screens/vin.hamlet")
-partnerScreen    = $(hamletFile "resources/templates/screens/partner.hamlet")
+callScreen       = $(hamletFile "src/Templates/screens/call.hamlet")
+caseScreen       = $(hamletFile "src/Templates/screens/case.hamlet")
+searchScreen     = $(hamletFile "src/Templates/screens/search.hamlet")
+backofficeScreen = $(hamletFile "src/Templates/screens/backoffice.hamlet")
+reportsScreen    = $(hamletFile "src/Templates/screens/reports.hamlet")
+vinScreen        = $(hamletFile "src/Templates/screens/vin.hamlet")
+partnerScreen    = $(hamletFile "src/Templates/screens/partner.hamlet")
 
 mainCont = [hamlet|
             <!-- Main container for dynamically rendered layouts -->
@@ -36,4 +36,5 @@ index user =
             ^{reportsScreen}
             ^{vinScreen}
             ^{partnerScreen}
+            ^{allFields}
             |]

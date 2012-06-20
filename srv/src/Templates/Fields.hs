@@ -8,10 +8,38 @@
 -- this template. Client code must prefer named templates to
 -- only-typed ones.
 
-module Templates.Fields () where
+module Templates.Fields (allFields) where
 
 import Text.Hamlet
 import Data.Text (Text)
+
+allFields =
+    [hamlet|
+     ^{textarea}
+     ^{statictext}
+     ^{text}
+     ^{datetime}
+     ^{date}
+     ^{phone}
+     ^{dictionary}
+     ^{picker}
+     ^{radioDictionary}
+     ^{select}
+     ^{checkbox}
+     ^{mapTpl}
+     ^{table}
+     ^{reference}
+     ^{group}
+     ^{serviceReference}
+     ^{actionReference}
+     ^{groupView}
+     ^{unknownField}
+     ^{emptyFields}
+     ^{servicePicker}
+     ^{checkListItem}
+     ^{unknown}
+     ^{defaultCaseGroup}
+     |]
 
 withMeta :: Text -> (t -> Html) -> t -> Html
 withMeta id c =
@@ -61,6 +89,7 @@ textarea = withMetaInfo "textarea-field-template"
                  {{# readonly }}disabled{{/ readonly }}
                  rows="7"
                  data-bind="value: {{ name }}, valueUpdate: 'afterkeydown'">
+       |]
 
 statictext = regField "statictext-field-template"
     [hamlet|
@@ -216,11 +245,13 @@ checkbox = regField "checkbox-field-template"
                data-provide="popover"
                data-content="{{ meta.infoText }}" />
           {{/ meta.infoText }}
+            |]
 
-map = regField "map-field-template"
+mapTpl = regField "map-field-template"
       [hamlet|
        <div class="controls">
          <div style="height:600px;" id="{{ name }}" class="osMap">
+       |]
 
 table = regField "table-field-template"
         [hamlet|
@@ -273,47 +304,35 @@ group = regField "group-field-template"
 -- "{{ refView }}-perms" will be used for instance permissions.
 
 -- May setup on-demand loading function.
+referenceTpl :: Text -> Text -> Text -> t -> Html
+referenceTpl id bind name =
+    let dataTarget :: Text
+        dataTarget = "#{{ refView }}-head"
+    in [hamlet|
+        <script type="text/template"
+                class="reference-template"
+                id="services-reference-template">
+          <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle"
+                 id="{{ refView }}-link"
+                 data-bind="#{bind}"
+                 data-target="#{dataTarget}"
+                 data-toggle="collapse">
+               #{name}
+
+            <div id="{{ refView }}-head"
+                 class="accordion-body collapse in">
+              <div class="accordion-inner {{ refClass }}"
+                   id="{{ refView }}">
+                <!-- Instance contents are rendered here -->
+            |]
 
 serviceReference =
-    [hamlet|
-     <script type="text/template"
-             class="reference-template"
-             id="services-reference-template">
-       <div class="accordion-group">
-         <div class="accordion-heading">
-           <a class="accordion-toggle"
-              id="{{ refView }}-link"
-              data-bind="text: modelTitle"
-              data-target="#{{ refView }}-head"
-              data-toggle="collapse">Услуга…
-
-         <div id="{{ refView }}-head"
-              class="accordion-body collapse in">
-           <div class="accordion-inner {{ refClass }}"
-                id="{{ refView }}">
-             <!-- Instance contents are rendered here -->
-         |]
+    referenceTpl "services-reference-template" "text: modelTitle" "Услуга…"
 
 actionReference =
-    [hamlet|
-     <script type="text/template"
-             class="reference-template"
-             id="actions-reference-template">
-       <div class="accordion-group">
-         <div class="accordion-heading">
-           <a class="accordion-toggle"
-              id="{{ refView }}-link"
-              data-bind="text: nameLocal"
-              data-target="#{{ refView }}-head"
-              data-toggle="collapse">Действие…
-         </div>
-
-         <div id="{{ refView }}-head"
-              class="accordion-body collapse {{^refId}}in{{/refId}}">
-           <div class="accordion-inner {{ refClass }}"
-                id="{{ refView }}">
-             <!-- Instance contents are rendered here -->
-       |]
+    referenceTpl "actions-reference-template" "text: nameLocal" "Действие…"
 
 -- Group view container
 groupView =
@@ -348,6 +367,7 @@ emptyFields =
            data-bind="css: { lierror: {{name}}Not }, visible: {{name}}Not">
          {{meta.label}}
        {{/ fields }}
+     |]
 
 -- Render service picker with services dictionary
 servicePicker =
