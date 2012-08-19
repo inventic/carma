@@ -7,13 +7,13 @@ this.setupSupervisorScreen = (viewName, args) ->
     return if t.hasClass("dataTable")
     dt = mkDataTable t,
       bPaginate: true
+      sPaginationType: "full_numbers"
       fnRowCallback: (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
         caseId = aData[0].split('/')[0]
         caseLnk = "<a href='/#case/#{caseId}'> #{aData[0]} </a>"
         cdate = Date.parse aData[5]
         gdate = (new Date).setMinutes((new Date).getMinutes() + 30)
         now = new Date
-
         $('td:eq(0)', nRow).html caseLnk
 
         # if duedate is past, make it yellow
@@ -46,7 +46,7 @@ this.setupSupervisorScreen = (viewName, args) ->
     d2 = (new Date).addDays(+7)
     $('#date-min').val d1.toString('dd.MM.yyyy HH:mm')
     $('#date-max').val d2.toString('dd.MM.yyyy HH:mm')
-    drawTable dt, sb(d1, d2)
+    dtRedraw dt
 
 drawTable = (dt, select) ->
   fields = "id,caseId,closed,name,assignedTo,targetGroup
@@ -82,6 +82,7 @@ drawTable = (dt, select) ->
           dt.fnSort [[5,'asc']]
           $('select[name=supervisor-table_length]').val(100)
           $('select[name=supervisor-table_length]').change()
+          allPages dt
 
 dtRedraw = (dt) ->
   d1 = Date.parse $('#date-min').val()
@@ -93,3 +94,13 @@ dtRedraw = (dt) ->
   drawTable dt, s
 
 sb = (d1,d2) -> "duetime >= #{toUnix d1}, duetime <= #{toUnix d2}"
+
+allPages = (dt) ->
+  d = new Date
+  r = _.filter dt.fnGetNodes(), (e) -> isClose(e, d, 60*30)
+  return if _.isEmpty r
+  dt.fnPageChange 'next' until $(r[0]).is(':visible')
+
+isClose = (e, time, delta) ->
+  v = Date.parse $('td:eq(5)', e).text()
+  Math.abs Math.round((time - v)/1000) < delta
