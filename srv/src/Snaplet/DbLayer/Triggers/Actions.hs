@@ -1,5 +1,7 @@
 module Snaplet.DbLayer.Triggers.Actions where
 
+import Prelude hiding (log)
+
 import Control.Arrow (first)
 import Control.Monad (when, void, forM, forM_, filterM)
 import Control.Monad.Trans
@@ -11,7 +13,8 @@ import qualified Data.ByteString.UTF8  as BU
 import qualified Data.Map as Map
 import Data.Char
 import Data.Maybe
-
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import qualified Fdds as Fdds
 ------------------------------------------------------------------------------
 import WeatherApi (getWeather', tempC)
@@ -28,6 +31,8 @@ import qualified Snaplet.DbLayer.RedisCRUD as RC
 import Snaplet.DbLayer.Types
 import Snaplet.DbLayer.Triggers.Types
 import Snaplet.DbLayer.Triggers.Dsl
+
+import Snap.Snaplet.SimpleLog
 
 import Util
 
@@ -65,13 +70,13 @@ actions = Map.fromList
         mapM_ (setSrvMCost) =<< B.split ',' <$> get objId "services"
         return ()
                    ])
-      ,("city", [\objId val -> do
-                  oldCity <- lift $ runRedisDB redis $ Redis.hget objId "city"
-                  case oldCity of
-                    Left _         -> return ()
-                    Right Nothing  -> setWeather objId val
-                    Right (Just c) -> when (c /= val) $ setWeather objId val
-                  ])
+      ,("city",
+        [\objId val -> do
+            oldCity <- get objId "city"
+            lscope "weather" $ log Trace
+              $ "setting weather for " `T.append` T.decodeUtf8 objId
+            setWeather objId val
+        ])
       ,("car_vin", [\objId val ->
         if B.length val /= 17
           then return ()
@@ -569,8 +574,14 @@ requestFddsVin objId vin = do
 setWeather objId city = do
   weather <- liftIO $ getWeather' (initApi "ru" "utf-8") $ BU.toString city
   case weather of
-    Right w -> set objId "temperature" $ B.pack $ show $ tempC w
-    Left  _ -> return ()
+    Right w -> do
+      lscope "weather" $ log Trace $
+        "retrieved weather: " `T.append` (T.pack $ show w)
+      set objId "temperature" $ B.pack $ show $ tempC w
+    Left  err -> do
+      lscope "weather" $ log Debug $
+        "can't retrieve " `T.append` (T.pack $ show err)
+      return ()
 
 srvCostCounted srvId = do
   falseCall        <- get srvId "falseCall"
@@ -632,3 +643,5 @@ setSrvMCost id =
     "taxi"   -> setTaxiMCost  id
     "rent"   -> setRentMCost  id
     _        -> return ()
+
+lscope = lift . scope
