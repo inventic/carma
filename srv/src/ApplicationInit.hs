@@ -73,6 +73,8 @@ routes = [ ("/",              method GET $ authOrLogin indexPage)
          , ("/smspost",       chkAuth . method POST $ smspost)
          , ("/sms/processing", chkAuth . method GET $ smsProcessingHandler)
          , ("/errors",        method POST errorsHandler)
+         , ("/cpCaseByPhone/:phone", chkAuth . method GET $ createCaseByPhone)
+         , ("/cpCase/:id", chkAuth . method POST $ copyCaseHandler)
          ]
 
 

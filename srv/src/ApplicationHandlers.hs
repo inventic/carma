@@ -384,3 +384,58 @@ errorsHandler = do
   r <- readRequestBody 4096
   liftIO $ withLog l $ scope "frontend" $ do
   log Info $ toStrict $ decodeUtf8 r
+
+createCaseByPhone :: AppHandler ()
+createCaseByPhone = do
+  phone <- last . B.split '/' . rqURI <$> getRequest
+  findCasesByPhone phone >>= writeJSON
+
+findCasesByPhone phone = do
+  cases <- with db $ DB.readAll "case"
+  return $ sortBy (\a b -> ctime b `compare` ctime a)
+    $ filter (\p -> Map.lookup "contact_phone1" p == Just phone) cases
+  where ctime = Map.lookup "ctime"
+
+copyCaseHandler :: AppHandler ()
+copyCaseHandler = do
+  Just id <- getParam "id"
+  copyCase id >>= writeJSON
+
+copyCase :: ByteString -> AppHandler (Map ByteString ByteString)
+copyCase id = do
+  let copyFields =
+        [ "car_vin"
+        , "car_seller"
+        , "car_make"
+        , "car_model"
+        , "car_plateNum"
+        , "car_makeYear"
+        , "car_color"
+        , "car_buyDate"
+        , "car_transmission"
+        , "car_engine"
+        , "car_liters"
+        , "car_capacity"
+        , "car_dims"
+        , "car_weight"
+        , "car_checkPeriod"
+        , "car_class"
+        , "contact_name"
+        , "contact_phone1"
+        , "contact_phone2"
+        , "contact_phone3"
+        , "contact_phone4"
+        , "contact_email"
+        , "contact_contactOwner"
+        , "contact_ownerName"
+        , "contact_ownerEmail"
+        , "contact_ownerPhone1"
+        , "contact_ownerPhone2"
+        , "contact_ownerPhone3"
+        , "contact_ownerPhone4"
+        ]
+  kase <- with db $ DB.read "case" id
+  let newCase = Map.fromList $ map (mkField kase) copyFields
+  with db $ DB.create "case" newCase
+    where
+      mkField m f = (f, fromMaybe "" $ Map.lookup f m)
